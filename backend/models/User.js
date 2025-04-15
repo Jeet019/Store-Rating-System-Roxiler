@@ -3,10 +3,15 @@ const sequelize = require("../config/db");
 
 const User = sequelize.define("User", {
     name: {
-        type: DataTypes.STRING(60),
+        // type: DataTypes.STRING(60),
+        // allowNull: false,
+        // validate: {
+        //     len: [20, 60],
+        // },
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
-            len: [20, 60],
+        len: [20, 60]  
         },
     },
     email: {

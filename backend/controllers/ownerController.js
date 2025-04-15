@@ -1,25 +1,77 @@
 const pool = require('../config/db');
 
 // Get list of users who rated the store
+// exports.addStore = async (req, res) => {
+//     const ownerId = req.user.id; 
+//     const { name, email, address } = req.body;
+//     try{
+//     if (existing.length > 0) {
+//         return res.status(400).json({ message: 'You already have a store.' });
+//       }
+      
+//       await pool.query(
+//         'INSERT INTO stores (name, email, address, owner_id) VALUES (?, ?, ?, ?)',
+//         [name, email, address, ownerId]
+//       );
+      
+//       res.status(201).json({ message: 'Store added successfully.' });
+//     }catch{
+//         res.status(500).json({ error: err.message });
+//     }
+
+// };
+// exports.addStore = async (req, res) => {
+//   const ownerId = req.user.id; 
+//   const { name, email, address } = req.body;
+
+//   try {
+//     const [existing] = await pool.query('SELECT * FROM stores WHERE owner_id = ?', [ownerId]);
+
+//     if (existing.length > 0) {
+//       return res.status(400).json({ message: 'You already have a store.' });
+//     }
+
+//     await pool.query(
+//       'INSERT INTO stores (name, email, address, owner_id) VALUES (?, ?, ?, ?)',
+//       [name, email, address, ownerId]
+//     );
+
+//     res.status(201).json({ message: 'Store added successfully.' });
+//   } catch (err) {
+//     console.error('Add Store Error:', err);
+//     res.status(500).json({ error: err.message });
+//   }
+// };
 exports.addStore = async (req, res) => {
-    const ownerId = req.user.id; 
-    const { name, email, address } = req.body;
-    try{
+  const ownerId = req.user?.id;
+  const { name, email, address } = req.body;
+
+  if (!ownerId) {
+    return res.status(400).json({ message: 'Owner ID missing from token.' });
+  }
+
+  try {
+    const [existing] = await pool.query(
+      'SELECT * FROM stores WHERE owner_id = ?',
+      [ownerId]
+    );
+
     if (existing.length > 0) {
-        return res.status(400).json({ message: 'You already have a store.' });
-      }
-      
-      await pool.query(
-        'INSERT INTO stores (name, email, address, owner_id) VALUES (?, ?, ?, ?)',
-        [name, email, address, ownerId]
-      );
-      
-      res.status(201).json({ message: 'Store added successfully.' });
-    }catch{
-        res.status(500).json({ error: err.message });
+      return res.status(400).json({ message: 'You already have a store.' });
     }
 
+    await pool.query(
+      'INSERT INTO stores (name, email, address, owner_id) VALUES (?, ?, ?, ?)',
+      [name, email, address, ownerId]
+    );
+
+    res.status(201).json({ message: 'Store added successfully.' });
+  } catch (err) {
+    console.error('Add Store Error:', err);
+    res.status(500).json({ error: err.message });
+  }
 };
+
 exports.getUsersWhoRatedStore = async (req, res) => {
   const storeId = req.user.store_id;  // Assuming store ID is saved in user profile
 

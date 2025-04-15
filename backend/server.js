@@ -3,6 +3,7 @@ const cors = require("cors");
 const authRoutes = require("./routes/auth");
 const adminRoutes = require('./routes/admin');
 const userRoutes = require('./routes/user');
+const ownerRoutes = require('./routes/owner');
 require("dotenv").config();
 const sequelize = require("./config/db");
 const PORT = process.env.PORT || 5000;
@@ -22,6 +23,7 @@ app.use((req, res, next) => {
 app.use("/api/auth", authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/owner', ownerRoutes);
 
 
 

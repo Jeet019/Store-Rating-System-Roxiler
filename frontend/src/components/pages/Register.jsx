@@ -19,12 +19,22 @@
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-        await api.post('/auth/register', { ...form });
+        // await api.post('/auth/register', { ...form });
+        await api.post('/auth/signup', { ...form });
+
         alert('Registration successful! You can now login.');
         navigate('/login');
-        } catch (err) {
-        alert(err.response?.data?.message || 'Registration failed');
-        }
+        // } catch (err) {
+        // alert(err.response?.data?.message || 'Registration failed');
+         } 
+        catch (err) {
+            if (err.response?.status === 409) {
+              alert("This email is already registered.");
+            } else {
+              alert(err.response?.data?.msg || "Registration failed");
+            }
+          }
+          
     };
 
     return (

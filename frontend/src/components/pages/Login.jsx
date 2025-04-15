@@ -20,8 +20,20 @@ const Login = () => {
         if (role === 'admin') navigate('/admin');
         else if (role === 'owner') navigate('/owner');
         else navigate('/user');
-        } catch (err) {
-        alert(err.response?.data?.message || 'Login failed');
+        }
+        //  catch (err) {
+        // alert(err.response?.data?.message || 'Login failed');
+        catch (err) {
+            const status = err.response?.status;
+            const msg = err.response?.data?.msg;
+          
+            if (status === 401) {
+              alert("Incorrect password. Please try again.");
+            } else if (status === 404) {
+              alert("User not found. Please register first.");
+            } else {
+              alert(msg || "Login failed.");
+            }
     }
     };
 
@@ -71,7 +83,7 @@ const Login = () => {
                 className="bg-transparent w-full text-white placeholder-white focus:outline-none"
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                required
+                
                 />
             </div>
 
